@@ -4,9 +4,7 @@ This project provides a basic API to execute updates in Luminate EMC, thus allow
 # TODO
 - improve error handling, auth fails alot, need to get back proper error response and try auth again
 
-- able to update event properties, should work on updating greeting page content next
-
-- first few chars cut off when updating text in event properties, also need to maake sure we clear out old responses
+- able to update event properties, should work on updating greeting page content
 
 - currently always returing error even when we have success
 
