@@ -5,23 +5,26 @@ export default ({ query }, res) => {
   const nextUrl = `${query.domain}/TREM?tr.emgmt=em_edit_event_properties&mfc_pref=T&fr_id=${query.frId}`
   return Promise.resolve()
     .then(() => auth(query, nextUrl))
-    .then(({ auth, page, error }) => {
-      console.log(auth, 'auth', error, 'error')
-      if (auth) {
-        console.log('we have auth')
-        return Eventprops(query, page)
-      } else {
-        return Promise.reject(error ? error : 'An unexpected error occured, please try again later')
-      }
-    })
+    .then(({ auth, page, error }) => auth ?
+        Eventprops(query, page)
+          .then(response => response.error ? Promise.reject(response) : response)
+      :
+        Promise.reject(error ? error : 'An unexpected error occured, please try again later')
+    )
     .then(result =>
       res.json({
-        data: result
+        data: {
+          ...result,
+          status: 'success'
+        }
       })
     )
-    .catch(error =>
+    .catch(result =>
       res.json({
-        error: error
+        data: {
+          ...result,
+          status: 'fail'
+        }
       })
     )
 }

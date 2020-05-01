@@ -6,9 +6,7 @@ This project provides a basic API to execute updates in Luminate EMC, thus allow
 
 - able to update event properties, should work on updating greeting page content next
 
-- first few chars cut off when updating text in event properties, also need to maake sure we clear out old responses
-
-- currently always returing error even when we have success
+- running into issues where i think the apps IP address has been blocked from too many login fails. Need to look into how LO handles that, can we whitelist the app ip to ensure this wont happen? Should be edge case, since we wont expose the endpoints unless we have correct username/password already. But, once ip gets blocked this app will no longer work
 
 ## Getting Started
 
