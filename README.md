@@ -1,12 +1,9 @@
-# Luminate Event Manager Center Scrapper
-This project provides a basic API to execute updates in Luminate EMC, thus allowing in-line editing from a TeamRaiser Greeting page.
+# Luminate Event Manager Center API
+Event Manager Center has no product API available. This project provides basic API endpoints in order to execute updates in Luminate EMC by using Puppeteer to run a headless browser and perform updates. Thus, these endpoints can be used to allow for things like in-line editing from a TeamRaiser Greeting page.
 
 # TODO
-- improve error handling, auth fails alot, need to get back proper error response and try auth again
+- make web content more dynamic, allow to pass target and have open up correct page
 
-- able to update event properties, should work on updating greeting page content next
-
-- running into issues where i think the apps IP address has been blocked from too many login fails. Need to look into how LO handles that, can we whitelist the app ip to ensure this wont happen? Should be edge case, since we wont expose the endpoints unless we have correct username/password already. But, once ip gets blocked this app will no longer work
 
 ## Getting Started
 
@@ -26,10 +23,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## API
 All API endpoints are located in this application at */pages/api/* and each at a minimum take the following required params:
 ```javascript
-params: {
-  username, // Event Manager username
-  password, // Event Manager password
-  domain, // secure domain for client, eg https://fundraising.qa.stjude.org/
+{
+  sessionId, // pass valid JSESSION ID string, this is the value that is saved as a cookie when logging into LO
+  env, // options are dev, qa, or defaults to prod
   frId // Event Id for the EMC that will be accessed
 }
 ```
@@ -37,20 +33,32 @@ params: {
 In addition each api method takes additional params as listed below.
 
 ### Event Properties
-Updates to the Event Properties tab also take the following params:
+Updates to the Event Properties tab also take the following endpoint and params:
+
+```
+/api/event-properties
+
+```
 
 ```javascript
-params: {
-  targetField, // The field to update, this based of the inputs id attribute in the EMC
-  content // string of string
+{
+  target, // The field to update, this based of the inputs id attribute in the EMC
+  content // string of text to use for update
 }
 ```
 
-Example endpoint would look like:
+### Update Website Page Content
 ```
-/api/event-properties?username=[username]&password=[password]&domain=https://fundraising.qa.stjude.org/site&frId=24014&targetField=shared_event_propsprop_sponsor_4.field&content=Oh%20boy%20this%20works
+/api/website-content
 
 ```
-### Update Event Greeting Page Content
 
-
+```javascript
+{
+  username,
+  password, // temporary workaround, pass username and password because when passing session id page elements are not avaliable
+  target, // The TeamRaiser page selected to be edited. This value is represented by the query string param in the url for 'pg='. So for Greeting Page the value would be 'entry' - STILL TO DO, FOR NOW JUST GOES TO ENTRY
+  sid, //Optional param for updating TeamRaiser Custom Pages. If the target value is 'informational', then you will also need to pass the sid parameter as well - STILL TO DO
+  content // string of html to use for updates
+}
+```
